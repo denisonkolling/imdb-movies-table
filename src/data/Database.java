@@ -11,20 +11,17 @@ import static java.lang.System.exit;
 public class Database {
     public static Connection connection = null;
 
-    private static String CONN_STRING = "jdbc:postgresql://localhost:5432/postgres";
+    private static String CONN_STRING = "jdbc:postgresql://localhost:5432/IMDB";
     private static String USERNAME = "postgres";
     private static String PASSWORD = "102030";
-    private static String GET_ALL_GENRES_SQL = "SELECT DISTINCT CONVERT RTRIM (genre) AS genre FROM title_genre";
-    private static String GET_ALL_TYPES_SQL = "SELECT DISTINCT RTRIM CONVERT (titleType) AS titleType FROM title_basic";
+    private static String GET_ALL_GENRES_SQL = "SELECT DISTINCT genres FROM tab_basics";
+    private static String GET_ALL_TYPES_SQL = "SELECT DISTINCT titleType FROM tab_basics";
 
-    private static String FIND_SHOWS_SQL = "SELECT TOP 50 primaryTitle, startYear, averageRating, numVotes\n" +
-            "FROM title_basics\n" +
-            "JOIN title_ratings ON title_basics.tconst = title_ratings.tconst\n" +
-            "JOIN title_genre ON title_basics.tconst = title_genre.tconst\n" +
-            "WHERE numVotes > ?\n" +
-            "AND titleType = ?\n" +
-            "AND\tgenre = ?\n'" +
-            "ORDER BY averageRating DESC;";
+    private static String FIND_SHOWS_SQL = "SELECT primarytitle, startyear, averagerating, numvotes\n" +
+            "FROM tab_basics\n" +
+            "INNER JOIN tab_ratings\n" +
+            "ON tab_basics.tconst = tab_ratings.tconst\n" +
+            "WHERE startYear = '2000' and averagerating > 8 and numvotes > 50000 and titletype = 'movie'\n";
 
     public static void connect(){
         if (connection != null) {
@@ -46,7 +43,7 @@ public class Database {
             PreparedStatement stmt = connection.prepareStatement(GET_ALL_GENRES_SQL);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()) {
-                genres.add(new Genre(rs.getString("genre")));
+                genres.add(new Genre(rs.getString("genres")));
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -98,33 +95,3 @@ public class Database {
     }
 
 }
-
-
-
-
-
-//    Connection connection;
-//
-//    public void connect(){
-//        try{
-//            Class.forName("org.postgresql.Driver");
-//            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "102030");
-//            System.out.println("Sucess!");
-//        } catch (ClassNotFoundException | SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-
-//    PreparedStatement pst;
-//    void tableLoad(){
-//        try {
-//            pst = connection.prepareStatement("select * from movies");
-//            ResultSet rs = pst.executeQuery();
-//            moviesTable.setModel(DbUtils.resultSetToTableModel(rs));
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
