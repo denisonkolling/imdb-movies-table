@@ -14,14 +14,18 @@ public class Database {
     private static String CONN_STRING = "jdbc:postgresql://localhost:5432/IMDB";
     private static String USERNAME = "postgres";
     private static String PASSWORD = "102030";
-    private static String GET_ALL_GENRES_SQL = "SELECT DISTINCT genres FROM tab_basics";
+
+    private static String GET_ALL_GENRES_SQL = "SELECT DISTINCT genres FROM tab_genre";
     private static String GET_ALL_TYPES_SQL = "SELECT DISTINCT titleType FROM tab_basics";
 
     private static String FIND_SHOWS_SQL = "SELECT primarytitle, startyear, averagerating, numvotes\n" +
             "FROM tab_basics\n" +
             "INNER JOIN tab_ratings\n" +
-            "ON tab_basics.tconst = tab_ratings.tconst\n" +
-            "WHERE startYear = '2000' and averagerating > 8 and numvotes > 50000 and titletype = 'movie'\n";
+            "ON tab_basics.tconst = tab_ratings.tconst\n";
+
+    private static String FIND_SHOWS_NUMVOTES_SQL = "WHERE numvotes > ?\n";
+    private static String FIND_SHOWS_TYPE_SQL = "AND titletype = ?\n";
+    private static String FIND_SHOWS_GENRE_SQL = "AND genres LIKE  CONCAT( '%',?,'%')\n" + "ORDER BY averagerating DESC\n";
 
     public static void connect(){
         if (connection != null) {
@@ -36,6 +40,7 @@ public class Database {
     }
 
     public static ArrayList<Genre> getAllGenres() {
+
         connect();
         ArrayList<Genre> genres = new ArrayList<Genre>();
 
@@ -52,6 +57,7 @@ public class Database {
     }
 
     public static ArrayList<ShowType> getAllShowTypes(){
+
         connect();
         ArrayList<ShowType> types = new ArrayList<ShowType>();
 
@@ -69,15 +75,27 @@ public class Database {
     }
 
 
-    public static ArrayList<Show> findShows(Integer minShows, String titleType, String genre){
+    public static ArrayList<Show> findShows(Integer minShows, String titleType, String genres){
+
         connect();
         ArrayList<Show> shows = new ArrayList<Show>();
+        boolean includeTypes = !titleType.equals(ShowType.ALL_TYPES);
+        boolean includeGenres = !genres.equals(Genre.ALL_GENRES);
 
         try{
-            PreparedStatement stmt = connection.prepareStatement(FIND_SHOWS_SQL);
+
+            String query = FIND_SHOWS_SQL;
+            query += FIND_SHOWS_NUMVOTES_SQL;
+            query += FIND_SHOWS_TYPE_SQL;
+            query += FIND_SHOWS_GENRE_SQL;
+
+
+
+            PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, minShows);
             stmt.setString(2, titleType);
-            stmt.setString(3, genre);
+            stmt.setString(3, genres);
+
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()) {

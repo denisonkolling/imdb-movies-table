@@ -8,6 +8,8 @@ public class Genre {
 
     private String name;
 
+    public static final String ALL_GENRES = "-- All Genres --";
+
     public Genre(String name) {
         this.name = name;
     }

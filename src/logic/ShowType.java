@@ -8,6 +8,8 @@ public class ShowType {
 
     private String name;
 
+    public static final String ALL_TYPES = "-- All Types --";
+
     public ShowType(String name) {
         this.name = name;
     }

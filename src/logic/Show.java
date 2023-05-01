@@ -17,8 +17,8 @@ public class Show {
         this.numVotes = numVotes;
     }
 
-    public static ArrayList<Show> findShows(Integer minShows, String titleType, String genre){
-        return Database.findShows(minShows, titleType, genre);
+    public static ArrayList<Show> findShows(Integer minShows, String titleType, String genres){
+        return Database.findShows(minShows, titleType, genres);
     }
 
     public String getPrimaryTitle() {

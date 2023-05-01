@@ -62,6 +62,8 @@ public class MainUI {
                 new String[]{"Title", "Year", "Rating", "Num Votes"}
         ));
 
+//        primarytitle, startyear, averagerating, numvotes
+
         TableColumnModel columns = showTable.getColumnModel();
         columns.getColumn(0).setMinWidth(250);
 
