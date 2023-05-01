@@ -9,7 +9,7 @@
 <br>
 
 <p align="center">
-  <img alt="program screen " src="imdb-movies-table.PNG" width="100%">
+  <img alt="program screen " src="imdb-movies-table.PNG" width="70%">
 </p>
 
 ## 🚀 Technologies
